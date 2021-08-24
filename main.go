@@ -5,13 +5,14 @@ import (
 
 	"github.com/ish-xyz/ssp/internal/jobs"
 	"github.com/ish-xyz/ssp/internal/k8s"
+	"github.com/ish-xyz/ssp/internal/server"
 )
 
 func main() {
 
 	client, _ := k8s.NewClient("/Users/ishamaraia/.kube/config")
 
-	job := jobs.Job{
+	_ = jobs.Job{
 		Client:    client,
 		Name:      "test",
 		Namespace: "default",
@@ -19,7 +20,9 @@ func main() {
 		Image:     "debian:latest",
 	}
 
-	job.Create()
+	//job.Create()
+
+	server.Start("7000")
 
 	fmt.Println("here")
 }

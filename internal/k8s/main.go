@@ -3,8 +3,8 @@ package k8s
 import (
 	"log"
 
-	clientcmd "k8s.io/client-go/1.5/tools/clientcmd"
 	kubernetes "k8s.io/client-go/kubernetes"
+	clientcmd "k8s.io/client-go/tools/clientcmd"
 )
 
 func NewClient(configPath string) (*kubernetes.Clientset, error) {
