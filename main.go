@@ -1,28 +1,17 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/ish-xyz/ssp/internal/jobs"
-	"github.com/ish-xyz/ssp/internal/k8s"
+	"github.com/ish-xyz/ssp/internal/config"
 	"github.com/ish-xyz/ssp/internal/server"
 )
 
 func main() {
 
-	client, _ := k8s.NewClient("/Users/ishamaraia/.kube/config")
-
-	_ = jobs.Job{
-		Client:    client,
-		Name:      "test",
-		Namespace: "default",
-		Command:   []string{"ls", "-al"},
-		Image:     "debian:latest",
+	c := config.Config{
+		KubeConfigPath:   "/Users/ishamaraia/.kube/config",
+		JobTemplatesPath: "/Users/ishamaraia/repos/ssp/debug/jobs",
+		ServerAddr:       "localhost",
+		ServerPort:       7000,
 	}
-
-	//job.Create()
-
-	server.Start("7000")
-
-	fmt.Println("here")
+	server.Start(c)
 }
