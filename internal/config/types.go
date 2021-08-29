@@ -1,8 +1,8 @@
 package config
 
 type Config struct {
-	ServerAddr       string
-	ServerPort       int
+	BackendAddr      string
+	FrontendAddr     string
 	KubeConfigPath   string
 	JobTemplatesPath string
 	AllowedUsers     []string

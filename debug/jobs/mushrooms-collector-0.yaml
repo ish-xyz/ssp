@@ -1,0 +1,36 @@
+metadata:
+  owner: platform-team
+  description: collects mushrooms
+
+inputs:
+- key: "name"
+  value: ""
+  description: "The name of the job"
+
+- key: "command"
+  value: ""
+  description: "The command to launch on the container"
+
+- key: "image"
+  value: ""
+  description: "The command to launch on the container"
+
+k8sJob:
+#we could use templating here
+  apiVersion: batch/v1
+  kind: Job
+  metadata:
+    creationTimestamp: null
+    name: mushrooms-collector
+  spec:
+    template:
+      metadata:
+        creationTimestamp: null
+      spec:
+        containers:
+        - command:
+          - ls
+          image: debian:latest
+          name: mushrooms-collector
+          resources: {}
+        restartPolicy: Never

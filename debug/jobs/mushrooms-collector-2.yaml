@@ -1,21 +1,24 @@
-name: mushrooms-collector
 metadata:
   owner: platform-team
   description: collects mushrooms
-k8sJob:
+
+inputs:
+- name: ""
+- cmd: ""
+
+template:
   apiVersion: batch/v1
   kind: Job
   metadata:
     creationTimestamp: null
-    name: mushrooms-collector
+    name: {{ name }}
   spec:
     template:
       metadata:
         creationTimestamp: null
       spec:
         containers:
-        - command:
-          - ls
+        - command: {{ cmd }}
           image: debian:latest
           name: mushrooms-collector
           resources: {}

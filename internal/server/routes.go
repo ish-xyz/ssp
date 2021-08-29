@@ -1,28 +1,44 @@
 package server
 
 import (
+	"fmt"
+	"io/ioutil"
 	"net/http"
-	"text/template"
+	"strings"
+
+	"github.com/ish-xyz/ssp/internal/logger"
+	"gopkg.in/yaml.v2"
 )
 
-func listJobs(w http.ResponseWriter, r *http.Request) {
-	// ls jobs from c.JobTemplatesPath
-	// load jobs metadata
+func listJobTemplates(w http.ResponseWriter, r *http.Request) {
 
-	err := templates.ExecuteTemplate(w, "listPage", nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	// return a list of jobTemplates
+	var jobTemplatesList []JobTemplateData
+	files, _ := ioutil.ReadDir(appConfig.JobTemplatesPath)
+
+	for _, f := range files {
+
+		var it JobTemplateData
+		yamlFile, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", appConfig.JobTemplatesPath, f.Name()))
+		if err != nil {
+			logger.ErrorLogger.Printf("Can't read file %s. Skipping. Error => %v ", f.Name(), err)
+			continue
+		}
+		err = yaml.Unmarshal(yamlFile, &it)
+		if err != nil {
+			logger.ErrorLogger.Printf("Can't unmarshal file %s. Skipping. Error => %v ", f.Name(), err)
+			continue
+		}
+
+		it.Name = strings.Split(f.Name(), ".yaml")[0]
+		jobTemplatesList = append(jobTemplatesList, it)
 	}
-}
 
-func login(w http.ResponseWriter, r *http.Request) {
-	// Login page
-	t, _ := template.ParseFiles("templates/login.html")
+	resp := Response{
+		Status: "ok",
+		Data:   jobTemplatesList,
+	}
 
-	t.Execute(w, map[string]string{})
-}
-
-func createJobGet(w http.ResponseWriter, r *http.Request) {
+	jsonResponse(w, r, resp)
 	return
 }

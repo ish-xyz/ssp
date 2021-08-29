@@ -1,10 +1,11 @@
 package server
 
-type ViewItem struct {
-	Name    string
-	Metdata map[string]string
+type JobTemplateData struct {
+	Name     string            `json:"name"`
+	Metadata map[string]string `yaml:"metadata" json:"metadata"`
 }
 
-type ListViewItems struct {
-	Items []*ViewItem
+type Response struct {
+	Status string      `json:"status"`
+	Data   interface{} `json:"data"`
 }

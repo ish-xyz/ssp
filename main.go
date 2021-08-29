@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/ish-xyz/ssp/internal/config"
 	"github.com/ish-xyz/ssp/internal/server"
+	"github.com/ish-xyz/ssp/internal/ui"
 )
 
 func main() {
@@ -10,8 +11,9 @@ func main() {
 	c := config.Config{
 		KubeConfigPath:   "/Users/ishamaraia/.kube/config",
 		JobTemplatesPath: "/Users/ishamaraia/repos/ssp/debug/jobs",
-		ServerAddr:       "localhost",
-		ServerPort:       7000,
+		BackendAddr:      "localhost:7000",
+		FrontendAddr:     "localhost:8000",
 	}
-	server.Start(c)
+	go server.Run(c)
+	ui.Run(c)
 }

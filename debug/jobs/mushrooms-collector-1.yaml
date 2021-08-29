@@ -1,0 +1,26 @@
+metadata:
+  owner: platform-team
+  description: collects mushrooms
+
+inputs:
+- name: ""
+- cmd: ""
+
+k8sJob:
+  apiVersion: batch/v1
+  kind: Job
+  metadata:
+    creationTimestamp: null
+    name: mushrooms-collector
+  spec:
+    template:
+      metadata:
+        creationTimestamp: null
+      spec:
+        containers:
+        - command:
+          - ls
+          image: debian:latest
+          name: mushrooms-collector
+          resources: {}
+        restartPolicy: Never
