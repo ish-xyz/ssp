@@ -2,10 +2,14 @@ package ui
 
 import (
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func listPage(w http.ResponseWriter, r *http.Request) {
-
+	/*
+		List Jobs page
+	*/
 	req, err := apiCall(w, r, "v1/list-job-templates")
 	if err != nil {
 		return
@@ -18,39 +22,18 @@ func listPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func formPage(w http.ResponseWriter, r *http.Request) {
+func lanchPage(w http.ResponseWriter, r *http.Request) {
+	/*
+		Launch Job page
+	*/
 
-	/*req, err := apiCall(w, r, "v1/list-job-templates")
+	params := mux.Vars(r)
+	req, err := apiCall(w, r, "/v1/get-job-template/"+params["name"])
 	if err != nil {
 		return
 	}
-	*/
 
-	//var inputs []map[string]interface{}
-
-	inputs := []map[string]interface{}{
-		map[string]interface{}{
-			"key": "options",
-			"value": []string{
-				"value1",
-				"value2",
-				"value3",
-			},
-			"description": "my job options",
-		},
-		map[string]interface{}{
-			"key":         "command",
-			"value":       "my-custom-command",
-			"description": "my-custom-command description",
-		},
-		map[string]interface{}{
-			"key":         "dry-run",
-			"value":       false,
-			"description": "Dry-run option",
-		},
-	}
-
-	err := templates.ExecuteTemplate(w, "formPage", inputs)
+	err = templates.ExecuteTemplate(w, "formPage", req.Data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

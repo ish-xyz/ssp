@@ -3,7 +3,7 @@
 <main role="main" class="container">
 <div class="my-3 p-3 bg-white rounded box-shadow">
 <form>
-    {{ range . }}
+    {{ range .inputs }}
     {{ if eq (printf "%T" .value) "string" }}
     <div class="form-group form-group-custom">
         <label for="key">{{ .key  }}</label>
@@ -12,10 +12,10 @@
     </div>
     {{ end }}
 
-    {{ if eq (printf "%T" .value) "[]string" }}
+    {{ if eq (printf "%T" .value) "[]interface {}" }}
     
     <div class="form-group form-group-custom">
-        <label for="key">{{ .key  }}</label>
+        <label for="option ">{{ .key  }}</label>
         <select class="form-control" id="value">
           {{ range .value }}
           <option>{{ . }}</option>
@@ -26,16 +26,16 @@
     {{ end }}
 
     {{ if eq (printf "%T" .value) "bool" }}
-    <div class="form-check form-group-custom">
+    <div class="form-check form-check-custom" style="background: #fbfbfb; padding: 5px; padding-left: 30px;">
         <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">{{ .key }}</label>
+        <label class="form-check-label" for="check">{{ .key }}</label>
         <small id="description" class="form-text text-muted">{{ .description }}</small>
     </div>
     {{ end }}
 
     {{ end }}
 
-    <button type="submit" class="launch btn btn-primary">Launch</button>
+    <a href="/run/{{ .name }}" class="launch btn btn-primary btn-sm" role="button">Launch</a>
   </form>
 </div>
 </main>

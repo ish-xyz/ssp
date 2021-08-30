@@ -45,11 +45,12 @@ func initRoutes(r *mux.Router) error {
 	// Init routes for webserver
 
 	r.HandleFunc("/v1/list-job-templates", listJobTemplates).Methods("GET")
+	r.HandleFunc("/v1/get-job-template/{name}", getJobTemplate).Methods("GET")
 	return nil
 }
 
-func jsonResponse(w http.ResponseWriter, r *http.Request, payload interface{}) {
+func jsonResponse(w http.ResponseWriter, r *http.Request, statusCode int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(payload)
 }

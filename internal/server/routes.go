@@ -6,39 +6,75 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/gorilla/mux"
 	"github.com/ish-xyz/ssp/internal/logger"
 	"gopkg.in/yaml.v2"
 )
 
-func listJobTemplates(w http.ResponseWriter, r *http.Request) {
+func loadJob(filename string) (JobTemplate, error) {
+	/*
+		Load and return a JobTemplate object
+	*/
+	var job JobTemplate
+	yamlFile, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", appConfig.JobTemplatesPath, filename))
+	if err != nil {
+		return JobTemplate{}, err
+	}
+	err = yaml.Unmarshal(yamlFile, &job)
+	if err != nil {
+		return JobTemplate{}, err
+	}
+	return job, nil
+}
 
-	// return a list of jobTemplates
-	var jobTemplatesList []JobTemplateData
+func listJobTemplates(w http.ResponseWriter, r *http.Request) {
+	/*
+		Get a list of jobTemplates
+	*/
+	var jobTemplatesList []JobTemplate
 	files, _ := ioutil.ReadDir(appConfig.JobTemplatesPath)
 
 	for _, f := range files {
 
-		var it JobTemplateData
-		yamlFile, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", appConfig.JobTemplatesPath, f.Name()))
+		job, err := loadJob(f.Name())
 		if err != nil {
-			logger.ErrorLogger.Printf("Can't read file %s. Skipping. Error => %v ", f.Name(), err)
-			continue
-		}
-		err = yaml.Unmarshal(yamlFile, &it)
-		if err != nil {
-			logger.ErrorLogger.Printf("Can't unmarshal file %s. Skipping. Error => %v ", f.Name(), err)
+			logger.ErrorLogger.Printf("Can't load file %s. Skipping. Error => %v", f.Name(), err)
 			continue
 		}
 
-		it.Name = strings.Split(f.Name(), ".yaml")[0]
-		jobTemplatesList = append(jobTemplatesList, it)
+		job.Name = strings.Split(f.Name(), ".yaml")[0]
+		jobTemplatesList = append(jobTemplatesList, job)
 	}
 
 	resp := Response{
 		Status: "ok",
 		Data:   jobTemplatesList,
 	}
+	jsonResponse(w, r, 200, resp)
+	return
+}
 
-	jsonResponse(w, r, resp)
+func getJobTemplate(w http.ResponseWriter, r *http.Request) {
+	/*
+		Get a single JobTemplate
+	*/
+	params := mux.Vars(r)
+	filename := fmt.Sprintf("%s.yaml", params["name"])
+
+	job, err := loadJob(filename)
+	if err != nil {
+		logger.ErrorLogger.Printf("Can't load file %s. Skipping. Error => %v", filename, err)
+		jsonResponse(w, r, 500, Response{
+			Status: "failed",
+			Data:   "request failed",
+		})
+		return
+	}
+	job.Name = params["name"]
+	resp := Response{
+		Status: "ok",
+		Data:   job,
+	}
+	jsonResponse(w, r, 200, resp)
 	return
 }

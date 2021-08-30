@@ -41,7 +41,7 @@ func initRoutes(r *mux.Router) error {
 	s := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
 	r.PathPrefix("/static/").Handler(s)
 	r.HandleFunc("/", listPage).Methods("GET")
-	r.HandleFunc("/form", formPage).Methods("GET")
+	r.HandleFunc("/launch/{name}", lanchPage).Methods("GET")
 	return nil
 }
 
@@ -55,7 +55,7 @@ func initK8sClient() error {
 func apiCall(w http.ResponseWriter, r *http.Request, endpoint string) (*Request, error) {
 	var req *Request
 
-	logger.DebugLogger.Printf("Frontend: calling backend at %s", endpoint)
+	logger.DebugLogger.Printf("Frontend calling backend at %s", endpoint)
 
 	reqURL := fmt.Sprintf("http://%s/%s", appConfig.BackendAddr, endpoint)
 	resp, err := http.Get(reqURL)
