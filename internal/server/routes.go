@@ -78,3 +78,16 @@ func getJobTemplate(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, r, 200, resp)
 	return
 }
+
+func runJob(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	nameSuffix := params["name"]
+	fmt.Println(r.FormValue("name"))
+	fmt.Println(nameSuffix)
+	//get payload with inputs
+	//serialize payload
+	//generate job name
+	//create a k8s job
+	//set job for auto-deletion
+	return
+}

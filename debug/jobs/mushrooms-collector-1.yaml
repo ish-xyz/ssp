@@ -16,10 +16,10 @@ inputs:
   description: "The command to launch on the container"
 
 - key: "dry-run"
-  value: false
+  value: true
   description: "The command to launch on the container"
 
-k8sJob:
+template:
   apiVersion: batch/v1
   kind: Job
   metadata:

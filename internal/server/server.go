@@ -42,10 +42,13 @@ func initK8sClient() error {
 }
 
 func initRoutes(r *mux.Router) error {
-	// Init routes for webserver
+	/*
+		Init api server routes
+	*/
 
 	r.HandleFunc("/v1/list-job-templates", listJobTemplates).Methods("GET")
 	r.HandleFunc("/v1/get-job-template/{name}", getJobTemplate).Methods("GET")
+	r.HandleFunc("/v1/run-job/{name}", runJob).Methods("POST")
 	return nil
 }
 

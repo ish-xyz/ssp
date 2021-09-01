@@ -1,8 +1,6 @@
 package ui
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"text/template"
 	"time"
@@ -50,23 +48,4 @@ func initK8sClient() error {
 	// TODO: remove hard coded config path
 	jobs.Client, _ = k8s.NewClient(appConfig.KubeConfigPath)
 	return nil
-}
-
-func apiCall(w http.ResponseWriter, r *http.Request, endpoint string) (*Request, error) {
-	var req *Request
-
-	logger.DebugLogger.Printf("Frontend calling backend at %s", endpoint)
-
-	reqURL := fmt.Sprintf("http://%s/%s", appConfig.BackendAddr, endpoint)
-	resp, err := http.Get(reqURL)
-	if err != nil {
-		logger.ErrorLogger.Printf("Can't request backend %s. Error => %v ", endpoint, err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal Server Error"))
-		return nil, err
-	}
-	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(&req)
-
-	return req, nil
 }

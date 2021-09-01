@@ -10,7 +10,7 @@ func listPage(w http.ResponseWriter, r *http.Request) {
 	/*
 		List Jobs page
 	*/
-	req, err := apiCall(w, r, "v1/list-job-templates")
+	req, err := backendGet(w, r, "v1/list-job-templates")
 	if err != nil {
 		return
 	}
@@ -28,7 +28,7 @@ func lanchPage(w http.ResponseWriter, r *http.Request) {
 	*/
 
 	params := mux.Vars(r)
-	req, err := apiCall(w, r, "/v1/get-job-template/"+params["name"])
+	req, err := backendGet(w, r, "v1/get-job-template/"+params["name"])
 	if err != nil {
 		return
 	}

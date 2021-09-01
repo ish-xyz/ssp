@@ -15,7 +15,7 @@ inputs:
   value: ""
   description: "The command to launch on the container"
 
-k8sJob:
+template:
 #we could use templating here
   apiVersion: batch/v1
   kind: Job
