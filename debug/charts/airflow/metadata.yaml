@@ -1,16 +1,10 @@
 metadata:
   owner: platform-team
   description: Create a dedicated airflow instance
-
 inputs:
-- key: "name"
-  value: ""
-  description: "The name of the job"
-
 - key: "command"
   value: ""
   description: "The command to launch on the container"
-
 - key: "image"
   value: ""
   description: "The command to launch on the container"

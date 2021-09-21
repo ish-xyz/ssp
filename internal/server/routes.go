@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -65,17 +66,22 @@ func getJobTemplate(w http.ResponseWriter, r *http.Request) {
 }
 
 func runJob(w http.ResponseWriter, r *http.Request) {
+
+	var data map[string]interface{}
+
 	params := mux.Vars(r)
-	nameSuffix := params["name"]
+	chart := params["name"]
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(r.FormValue("name"))
-	fmt.Println(string(body))
-	//{inputs, name}
 
-	fmt.Println(nameSuffix)
+	json.Unmarshal(body, &data)
+	//renderValues(chart, data)
+	fmt.Println(data)
+	fmt.Println(chart)
+	str, _ := renderValues(chart+"/values.yaml", data)
+	fmt.Println(str)
 	//get payload with inputs
 	//serialize payload
 	//generate job name

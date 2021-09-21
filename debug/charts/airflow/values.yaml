@@ -1,0 +1,6 @@
+{{define "values.yaml"}}
+
+command: {{ .command }}
+image: {{ .image }}
+
+{{end}}

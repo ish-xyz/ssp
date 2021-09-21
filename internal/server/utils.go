@@ -2,8 +2,10 @@ package server
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/ish-xyz/ssp/internal/logger"
 	jsoniter "github.com/json-iterator/go"
@@ -40,4 +42,16 @@ func loadJob(filename string) (JobTemplate, error) {
 		return JobTemplate{}, err
 	}
 	return job, nil
+}
+
+func renderValues(valueFile string, data map[string]interface{}) (string, error) {
+
+	filePath := fmt.Sprintf("%s/%s", appConfig.JobTemplatesPath, valueFile)
+	t := template.Must(template.New("values").ParseFiles(filePath))
+
+	if err := t.ExecuteTemplate(os.Stdout, "values.yaml", data); err != nil {
+		return "", err
+	}
+
+	return "", nil
 }
