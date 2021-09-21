@@ -40,6 +40,7 @@ func initRoutes(r *mux.Router) error {
 	r.PathPrefix("/static/").Handler(s)
 	r.HandleFunc("/", listPage).Methods("GET")
 	r.HandleFunc("/launch/{name}", lanchPage).Methods("GET")
+	r.HandleFunc("/run/{_name}", runResultPage).Methods("POST")
 	return nil
 }
 

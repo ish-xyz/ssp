@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"net/http"
 	"time"
 
@@ -30,7 +29,7 @@ func Run(c config.Config) {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	logger.InfoLogger.Printf("Web Server started on %s ...\n", appConfig.BackendAddr)
+	logger.InfoLogger.Printf("API Server started on %s ...\n", appConfig.BackendAddr)
 	logger.ErrorLogger.Fatal(srv.ListenAndServe())
 }
 
@@ -50,10 +49,4 @@ func initRoutes(r *mux.Router) error {
 	r.HandleFunc("/v1/get-job-template/{name}", getJobTemplate).Methods("GET")
 	r.HandleFunc("/v1/run-job/{name}", runJob).Methods("POST")
 	return nil
-}
-
-func jsonResponse(w http.ResponseWriter, r *http.Request, statusCode int, payload interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(payload)
 }

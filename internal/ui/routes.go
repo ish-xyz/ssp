@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -38,4 +39,19 @@ func lanchPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func runResultPage(w http.ResponseWriter, r *http.Request) {
+	/*
+		Job Creation result page
+	*/
+	//read form inputs
+	params := mux.Vars(r)
+	r.ParseForm()
+
+	r.Form["_name"] = []string{params["_name"]}
+	fmt.Println(r.Form)
+	// send r.Form as payload to the backend api
+	// read response and render right template
+	w.Write([]byte("Job created successfully"))
 }

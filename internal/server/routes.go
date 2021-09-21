@@ -4,28 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/ish-xyz/ssp/internal/logger"
-	"gopkg.in/yaml.v2"
 )
 
-func loadJob(filename string) (JobTemplate, error) {
-	/*
-		Load and return a JobTemplate object
-	*/
-	var job JobTemplate
-	yamlFile, err := ioutil.ReadFile(fmt.Sprintf("%s/%s", appConfig.JobTemplatesPath, filename))
-	if err != nil {
-		return JobTemplate{}, err
-	}
-	err = yaml.Unmarshal(yamlFile, &job)
-	if err != nil {
-		return JobTemplate{}, err
-	}
-	return job, nil
-}
+var metadataFile = "metadata.yaml"
 
 func listJobTemplates(w http.ResponseWriter, r *http.Request) {
 	/*
@@ -36,13 +20,13 @@ func listJobTemplates(w http.ResponseWriter, r *http.Request) {
 
 	for _, f := range files {
 
-		job, err := loadJob(f.Name())
+		job, err := loadJob(f.Name() + "/" + metadataFile)
 		if err != nil {
 			logger.ErrorLogger.Printf("Can't load file %s. Skipping. Error => %v", f.Name(), err)
 			continue
 		}
 
-		job.Name = strings.Split(f.Name(), ".yaml")[0]
+		job.Name = f.Name()
 		jobTemplatesList = append(jobTemplatesList, job)
 	}
 
@@ -50,6 +34,7 @@ func listJobTemplates(w http.ResponseWriter, r *http.Request) {
 		Status: "ok",
 		Data:   jobTemplatesList,
 	}
+
 	jsonResponse(w, r, 200, resp)
 	return
 }
@@ -59,7 +44,7 @@ func getJobTemplate(w http.ResponseWriter, r *http.Request) {
 		Get a single JobTemplate
 	*/
 	params := mux.Vars(r)
-	filename := fmt.Sprintf("%s.yaml", params["name"])
+	filename := fmt.Sprintf("%s/%s", params["name"], metadataFile)
 
 	job, err := loadJob(filename)
 	if err != nil {
@@ -82,7 +67,14 @@ func getJobTemplate(w http.ResponseWriter, r *http.Request) {
 func runJob(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	nameSuffix := params["name"]
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(r.FormValue("name"))
+	fmt.Println(string(body))
+	//{inputs, name}
+
 	fmt.Println(nameSuffix)
 	//get payload with inputs
 	//serialize payload

@@ -22,6 +22,7 @@ func backendGet(w http.ResponseWriter, r *http.Request, e string) (*Request, err
 		return nil, err
 	}
 	defer resp.Body.Close()
+
 	json.NewDecoder(resp.Body).Decode(&req)
 
 	return req, nil

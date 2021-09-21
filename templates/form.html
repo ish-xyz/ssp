@@ -2,12 +2,12 @@
 {{template "header"}}
 <main role="main" class="container">
 <div class="my-3 p-3 bg-white rounded box-shadow">
-<form>
+<form action="/run/{{ .name }}" method="post">
     {{ range .inputs }}
     {{ if eq (printf "%T" .value) "string" }}
     <div class="form-group form-group-custom">
         <label for="key">{{ .key  }}</label>
-        <input class="form-control" id="value" aria-describedby="value" placeholder="{{ .value }}">
+        <input name="{{ .key  }}" class="form-control" id="value" aria-describedby="value" placeholder="{{ .value }}">
         <small id="description" class="form-text text-muted">{{ .description }}</small>
     </div>
     {{ end }}
@@ -16,7 +16,7 @@
     
     <div class="form-group form-group-custom">
         <label for="option ">{{ .key  }}</label>
-        <select class="form-control" id="value">
+        <select name="{{ .key  }}" class="form-control" id="value">
           {{ range .value }}
           <option>{{ . }}</option>
           {{ end }}
@@ -28,19 +28,16 @@
     {{ if eq (printf "%T" .value) "bool" }}
     <div class="form-check form-check-custom" style="background: #fbfbfb; padding: 5px; padding-left: 30px;">
         {{ if .value }}  
-        <input type="checkbox" class="form-check-input" id="exampleCheck1" checked>
+        <input name="{{ .key  }}" type="checkbox" class="form-check-input" id="exampleCheck1" checked>
         {{ else }}
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <input name="{{ .key  }}" type="checkbox" class="form-check-input" id="exampleCheck1">
         {{ end }}
         <label class="form-check-label" for="check">{{ .key }}</label>
         <small id="description" class="form-text text-muted">{{ .description }}</small>
     </div>
-
     {{ end }}
-
     {{ end }}
-
-    <a href="/run/{{ .name }}" class="launch btn btn-primary btn-sm" role="button">Launch</a>
+    <button type="submit" class="launch btn btn-primary">Launch</button>
   </form>
 </div>
 </main>
